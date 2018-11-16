@@ -31,7 +31,6 @@ export default (options = { method: 'GET', data: {} }) => {
       // if (!noConsole) {
       console.log(`${new Date().toLocaleString()}【 M=${options.url} 】【接口响应：】`,res.data);
       // }
-      console.log(data.status)
       if (data.status && data.status !== 'ok') {
         Taro.showToast({
           title: `${res.data.error.message}~` || res.data.error.code,

@@ -6,10 +6,15 @@ import './index.less'
 import personalFMIcon from '../../image/cm2_discover_icn_fm-ip6@2x.png'
 import hotMusicIcon from '../../image/cm2_discover_icn_upbill-ip6@2x.png'
 import recommendIcon from '../../image/cm2_discover_icn_recmd@2x.png'
+import latestMusicIcon from '../../image/cm2_discover_icn_newest@2x.png'
+import recommendMvIcon from '../../image/cm2_discover_icn_mv@2x.png'
+import radioAnchorIcon from '../../image/cm2_discover_icn_radio@2x.png'
 
 // personal component
 import RecommendBar from '../../components/home/RecommendBar'
-import AlbumItem from '../../components/AlbumItem/index.js'
+import AlbumItem from '../../components/AlbumItem'
+import MusicItem from '../../components/MusicItme'
+import MvItem from '../../components/MvItem'
 
 // request
 import request from '../../utils/request'
@@ -20,18 +25,21 @@ export default class Index extends Component {
     navigationBarTitleText: '发现音乐'
   }
 
-  constructor () {
-    super ()
+  constructor (props) {
+    super (props)
     this.state = {
-      recommendList: []
+      recommendList: null,
+      latestMusicList: null,
+      recommendMvList: null,
+      radioAnchorList: null
     }
   }
 
   async componentWillMount () {
-    const data = await request({
-      url: 'personalized'
-    })
-    console.log(data)
+    this.requestRecommendList()
+    this.requestLatestMusicList()
+    this.requestRecommendMvList()
+    this.requestRadioAnchor()
   }
   componentDidMount () {
     // console.log(View)
@@ -43,11 +51,123 @@ export default class Index extends Component {
 
   componentDidHide () { }
 
+  async requestRecommendList () {
+    const {result} = await request({
+      url: 'personalized'
+    })
+    this.setState({
+      recommendList: this.fromatAlbumData(result)
+    }, () => {
+      // console.log(this.state)
+    })
+  }
+
+  async requestLatestMusicList () {
+    const {result} = await request({
+      url: 'personalized/newsong'
+    })
+    // console.log(this.fromatLatestMusicData(result))
+    this.setState({
+      latestMusicList: this.fromatLatestMusicData(result).filter((item, index) => index <= 5)
+    }, () => {
+      // console.log(this.state)
+    })
+  }
+
+  async requestRecommendMvList () {
+    const {result} = await request({
+      url: 'personalized/mv'
+    })
+    this.setState({
+      recommendMvList: this.fromatAlbumData(result)
+    },() => {
+      // console.log(this.state)
+    })
+  }
+
+  async requestRadioAnchor () {
+    const {result} = await request({
+      url: 'personalized/djprogram'
+    })
+    this.setState({
+      radioAnchorList: this.fromatAlbumData(result)
+    },() => {
+      console.log(this.state)
+    })
+    console.log(result)
+  }
+
+  fromatAlbumData (listData) {
+    let formatList = []
+    listData.map((item => {
+      let {
+        name,
+        playCount: playCount = 0,
+        picUrl: imgUrl,
+        artistName: artist = ''
+      } = item
+      formatList.push({
+        name,
+        playCount,
+        imgUrl,
+        artist
+      })
+    }))
+    return formatList
+  }
+
+  fromatLatestMusicData (listData) {
+    let formatList = []
+
+    listData.map(item => {
+      let {
+        name,
+        song: {
+          album: {
+            blurPicUrl: imgUrl,
+            artists: [{
+              name: artist
+            }]
+          }
+        }
+      } = item
+      formatList.push({
+        name,
+        imgUrl,
+        artist
+      })
+    })
+    return formatList
+  }
+
   render () {
-    const recommendBarList = {
+    const recommendBarMsg = {
       imgUrl: recommendIcon,
-      linkUrl: ''
+      linkUrl: '',
+      text: '推荐歌单'
     } // 推荐歌单图标和查看更多链接
+    const recommendAlbumList = this.state.recommendList
+
+    const latestMusicBarMsg = {
+      imgUrl: latestMusicIcon,
+      linkUrl: '',
+      text: '最新音乐'
+    }
+    const latestMusicList = this.state.latestMusicList
+
+    const recommendMvBarMsg = {
+      imgUrl: recommendMvIcon,
+      linkUrl: '',
+      text: '推荐MV'
+    }
+    const recommendMvList = this.state.recommendMvList
+
+    const radioAnchorBarMsg = {
+      imgUrl: radioAnchorIcon,
+      linkUrl: '',
+      text: '主播电台'
+    }
+    const radioAnchorList = this.state.radioAnchorList
 
     return (
       <View className='index todos'>
@@ -87,13 +207,46 @@ export default class Index extends Component {
 
         <View className='container'>
           <View className='recommend-music-list'>
-            <RecommendBar linkMsg={recommendBarList} />
+            <RecommendBar linkMsg={recommendBarMsg} />
             <View className='music-list'>
-              <AlbumItem />
-              <AlbumItem />
-              <AlbumItem />
-              <AlbumItem />
-              <AlbumItem />
+              {
+                recommendAlbumList.map((recommend, index) => {
+                  return <AlbumItem key={index} albumMsg={recommend} />
+                })
+              }
+            </View>
+
+            <View className='latest-music-list'>
+              <RecommendBar linkMsg={latestMusicBarMsg} />
+              <View className='music-list'>
+                {
+                  latestMusicList.map((latestMusic, index) => {
+                    return <MusicItem key={index} musicMsg={latestMusic} />
+                  })
+                }
+              </View>
+            </View>
+
+            <View className='recommend-mv-list'>
+              <RecommendBar linkMsg={recommendMvBarMsg} />
+              <View className='music-list'>
+                {
+                  recommendMvList.map(((recommendMv, index) => {
+                    return <MvItem key={index} mvMsg={recommendMv} />
+                  }))
+                }
+              </View>
+
+              <View className='radio-anchor-list'>
+                <RecommendBar linkMsg={radioAnchorBarMsg} />
+                <View className='music-list'>
+                  {
+                    radioAnchorList.map(((recommendMv, index) => {
+                      return <MusicItem key={index} musicMsg={recommendMv} />
+                    }))
+                  }
+                </View>
+              </View>
             </View>
           </View>
 
