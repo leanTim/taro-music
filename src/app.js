@@ -1,12 +1,8 @@
 import Taro, { Component } from '@tarojs/taro'
-import { Provider } from '@tarojs/redux'
 
 import Index from './pages/index'
-import configStore from './store'
 
 import './app.less'
-
-const store = configStore()
 
 class App extends Component {
 
@@ -15,10 +11,28 @@ class App extends Component {
       'pages/index/index'
     ],
     window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
+      backgroundTextStyle: '#fbfcfd',
+      navigationBarBackgroundColor: '#BB2C08',
+      navigationBarTitleText: 'Music',
+      navigationBarTextStyle: '#fff'
+    },
+    tabBar: {
+      'color': '#aaa',
+      'selectedColor': '#fff',
+      'borderStyle': '#333',
+      'backgroundColor': '#212121',
+      list: [{
+          pagePath: 'pages/index/index',
+          text: '发现音乐',
+          iconPath: './image/cm2_btm_icn_discovery.png',
+          selectedIconPath: './image/cm2_btm_icn_discovery_prs.png'
+        },{
+          pagePath: 'pages/index/index',
+          text: '发现音乐',
+          iconPath: './image/cm2_btm_icn_music.png',
+          selectedIconPath: './image/cm2_btm_icn_music_prs.png'
+        },
+      ]
     }
   }
 
@@ -34,9 +48,9 @@ class App extends Component {
   // 请勿修改此函数
   render () {
     return (
-      <Provider store={store}>
-        <Index />
-      </Provider>
+      // <Provider store={store}>
+      <Index />
+      // </Provider>
     )
   }
 }
