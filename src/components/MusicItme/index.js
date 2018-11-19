@@ -22,7 +22,6 @@ export default class MusicItem extends Component {
   }
 
   handlerClick (id, e) {
-    console.log(id, e)
     Taro.navigateTo({
       url: `/pages/playing/index?id=${id}`
     })

@@ -21,6 +21,7 @@ import listIcon from '../../image/cm2_icn_list@2x.png'
 
 // request
 import request from '../../utils/request'
+import {formateDuration} from '../../utils'
 
 export default class Index extends Component {
 
@@ -31,16 +32,22 @@ export default class Index extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      bgImgUrl: ''
+      bgImgUrl: '',
+      songUrl: '',
+      isPaused: false,
+      duration: 0,
+      test: 'afasfasdf'
     }
   }
 
-  componentWillMount () {
-     this.requestSongDetail(this.$router.params.id)
+  async componentWillMount () {
+    const id = this.$router.params.id
+    await this.requestSongDetail(id)
+    this.requestSongUrl(id)
   }
 
   componentDidMount () {
-    console.log(this.$router.params)
+    // console.log(this.$router.params)
   }
 
   componentWillUnmount () { }
@@ -58,21 +65,85 @@ export default class Index extends Component {
     })
     const {
       name,
+      dt: duration,
       al: {
         picUrl: bgImgUrl = ''
-      }
+      },
+      ar: [
+        {
+          name: artist
+        }
+      ]
     } = songs[0]
+    this.songName = name
+    this.artist = artist
     Taro.setNavigationBarTitle({
       title: name
     })
     this.setState({
-      bgImgUrl
+      bgImgUrl,
+      duration
+    }, () => {
+      // console.log(this.state)
     })
-    console.log(songs)
+    // console.log(songs)
+  }
+
+  async requestSongUrl (id) {
+    const {data} = await request({
+      url: 'song/url',
+      data: {
+        id
+      }
+    })
+    const {
+      url
+    } = data[0]
+    this.setState({
+      songUrl: url
+    }, () => {
+      this.audioPlayer()
+    })
+  }
+
+  audioPlayer () {
+    const backgroundAudioManager = Taro.getBackgroundAudioManager()
+    const songUrl = this.state.songUrl
+    backgroundAudioManager.src = songUrl
+    backgroundAudioManager.title = this.songName
+    backgroundAudioManager.epname = this.songName
+    backgroundAudioManager.singer = this.artist
+    backgroundAudioManager.coverImgUrl = this.state.bgImgUrl
+    backgroundAudioManager.onCanplay(() => {
+    })
+    this.audioManager = backgroundAudioManager
+    setTimeout(() => {
+    }, 100) 
+  }
+
+  audioPlayPause () {
+    this.audioManager.paused ? this.audioPlay() : this.audioPause()
+  }
+
+  audioPlay () {
+    this.audioManager.play()
+    this.setState({
+      isPaused: false
+    })
+  }
+
+  audioPause () {
+    this.audioManager.pause()
+    this.setState({
+      isPaused: true
+    })
   }
 
   render () {
     const bgImgUrl = this.state.bgImgUrl ? this.state.bgImgUrl : playingBg
+    const playPausedIcon = this.state.isPaused ? startIcon : pausedIcon
+    const durationStr = formateDuration(this.state.duration)
+
     return (
       <View className='playing-page'>
         <Image className='page-bg' mode='aspectFill' src={bgImgUrl} />
@@ -106,7 +177,7 @@ export default class Index extends Component {
             <View className='progress'>
               <Text className='start-time'>00:00</Text>
               <Slider activeColor='#BB2C08' max='1000' value='100' blockSize='12' className='slider' />
-              <Text className='end-time'>03:00</Text>
+              <Text className='end-time'>{durationStr}</Text>
             </View>
 
             <View className='controls'>
@@ -117,7 +188,7 @@ export default class Index extends Component {
                 <Image src={prevIcon} mode='aspectFill' className='ctrl-img' />
               </View>
               <View className='start-pause ctrl-icon'>
-                <Image src={startIcon} mode='aspectFill' className='ctrl-img' />
+                <Image src={playPausedIcon} mode='aspectFill' onClick={this.audioPlayPause.bind(this)} className='ctrl-img' />
               </View>
               <View className='next ctrl-icon'>
                 <Image src={nextIcon} mode='aspectFill' className='ctrl-img' />
