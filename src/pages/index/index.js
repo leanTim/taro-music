@@ -181,35 +181,29 @@ export default class Index extends Component {
   }
 
   render () {
-    const bannerList = this.state.bannerList
-
     const recommendBarMsg = {
       imgUrl: recommendIcon,
       linkUrl: '',
       text: '推荐歌单'
     } // 推荐歌单图标和查看更多链接
-    const recommendAlbumList = this.state.recommendList
 
     const latestMusicBarMsg = {
       imgUrl: latestMusicIcon,
       linkUrl: '',
       text: '最新音乐'
     }
-    const latestMusicList = this.state.latestMusicList
 
     const recommendMvBarMsg = {
       imgUrl: recommendMvIcon,
       linkUrl: '',
       text: '推荐MV'
     }
-    const recommendMvList = this.state.recommendMvList
 
     const radioAnchorBarMsg = {
       imgUrl: radioAnchorIcon,
       linkUrl: '',
       text: '主播电台'
     }
-    const radioAnchorList = this.state.radioAnchorList
 
     return (
       <View className='index todos'>
@@ -255,7 +249,7 @@ export default class Index extends Component {
             <RecommendBar linkMsg={recommendBarMsg} />
             <View className='music-list'>
               {
-                recommendAlbumList.map((recommend, index) => {
+                recommendList.map((recommend, index) => {
                   return <AlbumItem key={index} albumMsg={recommend} />
                 })
               }
