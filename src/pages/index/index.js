@@ -31,11 +31,13 @@ export default class Index extends Component {
       recommendList: null,
       latestMusicList: null,
       recommendMvList: null,
-      radioAnchorList: null
+      radioAnchorList: null,
+      bannerList: null
     }
   }
 
   async componentWillMount () {
+    this.requestBanner()
     this.requestRecommendList()
     this.requestLatestMusicList()
     this.requestRecommendMvList()
@@ -51,17 +53,34 @@ export default class Index extends Component {
 
   componentDidHide () { }
 
-  async requestRecommendList () {
-    const {result} = await request({
-      url: 'personalized'
+  // banner
+
+  async requestBanner () {
+    const {banners} = await request({
+      url: 'banner'
     })
     this.setState({
-      recommendList: this.fromatAlbumData(result)
+      bannerList: this.formatBannerData(banners)
+    }, () => {
+      // console.log(this.state)
+    })
+    // console.log(banners, 'banners')
+  }
+
+  // 推荐歌单
+  async requestRecommendList () {
+    const {result} = await request({
+      url: 'personalized',
+      limit: 6
+    })
+    this.setState({
+      recommendList: this.fromatAlbumData(result).filter((item, index) => index <= 5)
     }, () => {
       // console.log(this.state)
     })
   }
 
+  // 最新音乐
   async requestLatestMusicList () {
     const {result} = await request({
       url: 'personalized/newsong'
@@ -74,6 +93,7 @@ export default class Index extends Component {
     })
   }
 
+  // 最新mv
   async requestRecommendMvList () {
     const {result} = await request({
       url: 'personalized/mv'
@@ -85,6 +105,7 @@ export default class Index extends Component {
     })
   }
 
+  // 主播电台
   async requestRadioAnchor () {
     const {result} = await request({
       url: 'personalized/djprogram'
@@ -92,9 +113,26 @@ export default class Index extends Component {
     this.setState({
       radioAnchorList: this.fromatAlbumData(result)
     },() => {
-      console.log(this.state)
+      // console.log(this.state)
     })
-    console.log(result)
+    // console.log(result)
+  }
+
+  formatBannerData (banners) {
+    let formatList = []
+    banners.map((banner) => {
+      let {
+        targetId: id,
+        imageUrl: imgUrl
+      } = banner
+
+      formatList.push({
+        id,
+        imgUrl
+      })
+    })
+
+    return formatList
   }
 
   fromatAlbumData (listData) {
@@ -122,6 +160,7 @@ export default class Index extends Component {
     listData.map(item => {
       let {
         name,
+        id,
         song: {
           album: {
             blurPicUrl: imgUrl,
@@ -134,13 +173,16 @@ export default class Index extends Component {
       formatList.push({
         name,
         imgUrl,
-        artist
+        artist,
+        id
       })
     })
     return formatList
   }
 
   render () {
+    const bannerList = this.state.bannerList
+
     const recommendBarMsg = {
       imgUrl: recommendIcon,
       linkUrl: '',
@@ -172,12 +214,15 @@ export default class Index extends Component {
     return (
       <View className='index todos'>
         <Swiper interval='3000' indicatorDots autoplay className='swiper'>
-          <SwiperItem>
-            <Image className='swiper-img' mode='aspectFill' src='http://p1.music.126.net/yIbBqULjFgV-DTKf3FeW1g==/109951163666135368.jpg'/>
-          </SwiperItem>
-          <SwiperItem>
-            <Image className='swiper-img' mode='aspectFill' src='http://p1.music.126.net/Y20Igu3wAWz0dAvVtG7GLg==/109951163666631402.jpg'/>
-          </SwiperItem>
+          {
+            bannerList.map((banner) => {
+              return (
+                <SwiperItem key={banner.id}>
+                  <Image className='swiper-img' mode='aspectFill' src={banner.imgUrl}/>
+                </SwiperItem>
+              )
+            })
+          }
         </Swiper>
 
         <View className='recommend-wrap'>

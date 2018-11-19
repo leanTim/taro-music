@@ -18,17 +18,25 @@ export default class MusicItem extends Component {
   }
 
   static propTypes = {
+    musicMsg: PropTypes.object.isRequired
+  }
 
+  handlerClick (id, e) {
+    console.log(id, e)
+    Taro.navigateTo({
+      url: `/pages/playing/index?id=${id}`
+    })
   }
 
   render () {
     const {
       name,
       artist,
-      imgUrl
+      imgUrl,
+      id
     } = this.props.musicMsg
     return (
-      <View className='music-item'>
+      <View className='music-item' onClick={this.handlerClick.bind(this, id)}>
         <Image className='poster' src={imgUrl} mode='aspectFill' />
         <View className='name text'>{name}</View>
         <View className='artist text'>{artist}</View>
