@@ -1,11 +1,11 @@
 /**
- * 
+ * 毫秒时间转换成分(03:20)
  * @param {String} t  (ms)
  */
-export function formateDuration (t) {
+export function transformMsToMin (t) {
   return (function (t) {
     // s
-    const durationS = Math.round(parseInt(t) / 1000)
+    const durationS = Math.round(parseFloat(t) / 1000)
     const m = Math.floor(durationS / 60)
     const s = durationS % 60
     return fill(m) + ':' + fill(s)

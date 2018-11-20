@@ -21,7 +21,11 @@ import listIcon from '../../image/cm2_icn_list@2x.png'
 
 // request
 import request from '../../utils/request'
-import {formateDuration} from '../../utils'
+
+import {transformMsToMin} from '../../utils'
+
+// components
+import LyricPlaying from '../../components/LyricPlaying'
 
 export default class Index extends Component {
 
@@ -36,18 +40,20 @@ export default class Index extends Component {
       songUrl: '',
       isPaused: false,
       duration: 0,
-      test: 'afasfasdf'
+      current: 0,
+      lyric: '',
+      isShowLyric: false
     }
   }
 
-  async componentWillMount () {
-    const id = this.$router.params.id
-    await this.requestSongDetail(id)
-    this.requestSongUrl(id)
+  componentWillMount () {
+    
   }
 
-  componentDidMount () {
-    // console.log(this.$router.params)
+  async componentDidMount () {
+    this.id = this.$router.params.id
+    await this.requestSongDetail(this.id)
+    this.requestSongUrl(this.id)
   }
 
   componentWillUnmount () { }
@@ -83,10 +89,7 @@ export default class Index extends Component {
     this.setState({
       bgImgUrl,
       duration
-    }, () => {
-      // console.log(this.state)
     })
-    // console.log(songs)
   }
 
   async requestSongUrl (id) {
@@ -106,6 +109,21 @@ export default class Index extends Component {
     })
   }
 
+  async requestLyric (id) {
+    const data = await request({
+      url: 'lyric',
+      data: {
+        id
+      }
+    })
+    this.setState({
+      lyric: data.lrc.lyric
+    }, () => {
+      // console.log(this.state)
+    })
+    // console.log(data)
+  }
+
   audioPlayer () {
     const backgroundAudioManager = Taro.getBackgroundAudioManager()
     const songUrl = this.state.songUrl
@@ -114,11 +132,19 @@ export default class Index extends Component {
     backgroundAudioManager.epname = this.songName
     backgroundAudioManager.singer = this.artist
     backgroundAudioManager.coverImgUrl = this.state.bgImgUrl
-    backgroundAudioManager.onCanplay(() => {
+    backgroundAudioManager.onPlay(() => {
+      this.audioPlay()
+    })
+    backgroundAudioManager.onPause(() => {
+      this.audioPause()
+    })
+    backgroundAudioManager.onTimeUpdate(() => {
+      this.setState({
+        current: Math.round(parseFloat(backgroundAudioManager.currentTime * 1000))
+      })
     })
     this.audioManager = backgroundAudioManager
-    setTimeout(() => {
-    }, 100) 
+
   }
 
   audioPlayPause () {
@@ -139,20 +165,35 @@ export default class Index extends Component {
     })
   }
 
+  handleSlideChange (e) {
+    this.audioManager.seek(e.detail.value / 1000)
+  }
+
+  async handleyric () {
+    // console.log(this.state.lyric.length)
+    if (this.state.lyric.length) return
+    await this.requestLyric(this.id)
+    this.setState({
+      isShowLyric: true
+    })
+    // console.log(this.state)
+  }
+
   render () {
     const bgImgUrl = this.state.bgImgUrl ? this.state.bgImgUrl : playingBg
     const playPausedIcon = this.state.isPaused ? startIcon : pausedIcon
-    const durationStr = formateDuration(this.state.duration)
+    const durationStr = transformMsToMin(this.state.duration)
+    const currentStr = transformMsToMin(this.state.current)
 
     return (
       <View className='playing-page'>
         <Image className='page-bg' mode='aspectFill' src={bgImgUrl} />
-        <View className='playing-main'>
+        <View className={`playing-main ${isShowLyric ? ' show-lyric' : ''}`}>
           <View className='phonograph'>
             <View className='tool flex-center'>
               <Image className='img' mode='aspectFill' src={aag} /> 
             </View>
-            <View className='panel flex-center'>
+            <View className='panel flex-center' onClick={this.handleyric.bind(this)}>
               <Image className='bg' mode='aspectFit' src={panelBg} />
               <Image className='album-img' mode='aspectFill' src={bgImgUrl} />
             </View>
@@ -175,8 +216,14 @@ export default class Index extends Component {
             </View>
 
             <View className='progress'>
-              <Text className='start-time'>00:00</Text>
-              <Slider activeColor='#BB2C08' max='1000' value='100' blockSize='12' className='slider' />
+              <Text className='start-time'>{currentStr}</Text>
+              <Slider 
+                activeColor='#BB2C08' 
+                max={duration} 
+                value={current} 
+                blockSize='12' 
+                className='slider' 
+                onChange={this.handleSlideChange.bind(this)} />
               <Text className='end-time'>{durationStr}</Text>
             </View>
 
@@ -198,6 +245,8 @@ export default class Index extends Component {
               </View>
             </View>
           </View>
+
+          <LyricPlaying lyric={lyric} />
         </View>
       </View>
     )

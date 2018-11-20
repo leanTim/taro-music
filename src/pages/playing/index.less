@@ -17,6 +17,7 @@
     transform: scale(1.2);
     background-color: transparent;
   }
+  // 不显示歌词
   .playing-main {
     width: 100%;
     height: 100%;
@@ -99,4 +100,13 @@
       }
     }
   } 
+  // 显示歌词
+  .show-lyric {
+    .playing-info {
+      display: none!important;
+    }
+    .phonograph {
+      display: none;
+    }
+  }
 }

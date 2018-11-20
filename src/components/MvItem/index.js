@@ -24,6 +24,10 @@ export default class MvItem extends Component {
     }
   }
 
+  componentDidMount () {
+    console.log(this.props)
+  }
+
   render () {
     const {
       name,
