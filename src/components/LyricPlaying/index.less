@@ -1,0 +1,34 @@
+.lyric-playing {
+  position: relative;
+  height: calc(100vh - 208px);
+  overflow: hidden;
+  &:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 144px;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+  }
+  .lyric-wrap {
+    width: 100%;
+    height: 100%;
+    transition: all ease 1s;
+    view {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: 72px;
+      line-height: 1.2;
+      word-break: break-all;
+      opacity: .5;
+      overflow: hidden;
+      font-size: 30px;
+      color: #fff;
+    }
+    .current {
+      opacity: 1;
+    }
+  }
+}

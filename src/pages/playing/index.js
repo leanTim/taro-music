@@ -118,10 +118,7 @@ export default class Index extends Component {
     })
     this.setState({
       lyric: data.lrc.lyric
-    }, () => {
-      // console.log(this.state)
     })
-    // console.log(data)
   }
 
   audioPlayer () {
@@ -170,13 +167,17 @@ export default class Index extends Component {
   }
 
   async handleyric () {
-    // console.log(this.state.lyric.length)
-    if (this.state.lyric.length) return
-    await this.requestLyric(this.id)
+    if (!this.state.lyric.length) await this.requestLyric(this.id)
     this.setState({
       isShowLyric: true
     })
-    // console.log(this.state)
+  }
+
+  hideLyric (isShowLyric) {
+    console.log('hide')
+    this.setState({
+      isShowLyric
+    })
   }
 
   render () {
@@ -245,8 +246,7 @@ export default class Index extends Component {
               </View>
             </View>
           </View>
-
-          <LyricPlaying lyric={lyric} />
+          {this.state.isShowLyric && <LyricPlaying onHideLyric={this.hideLyric.bind(this)} current={Math.round(this.state.current / 1000)} lyric={this.state.lyric} />}
         </View>
       </View>
     )
