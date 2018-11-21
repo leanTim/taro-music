@@ -1,4 +1,4 @@
-import Taro, { Component } from '@tarojs/taro'
+import Taro, { Component, hideToast } from '@tarojs/taro'
 import { View, Text, Image, Slider } from '@tarojs/components'
 import './index.less'
 
@@ -42,7 +42,8 @@ export default class Index extends Component {
       duration: 0,
       current: 0,
       lyric: '',
-      isShowLyric: false
+      isShowLyric: false,
+      isShowDefaultBg: true
     }
   }
 
@@ -174,21 +175,26 @@ export default class Index extends Component {
   }
 
   hideLyric (isShowLyric) {
-    console.log('hide')
     this.setState({
       isShowLyric
     })
   }
 
+  handleBgLoad () {
+    this.setState({
+      isShowDefaultBg: false
+    })
+  }
+
   render () {
-    const bgImgUrl = this.state.bgImgUrl ? this.state.bgImgUrl : playingBg
     const playPausedIcon = this.state.isPaused ? startIcon : pausedIcon
     const durationStr = transformMsToMin(this.state.duration)
     const currentStr = transformMsToMin(this.state.current)
 
     return (
       <View className='playing-page'>
-        <Image className='page-bg' mode='aspectFill' src={bgImgUrl} />
+        {isShowDefaultBg && <Image className='page-bg' mode='aspectFill' src={playingBg} />}
+        <Image className='page-bg' mode='aspectFill' src={this.state.bgImgUrl} onLoad={this.handleBgLoad.bind(this)} />
         <View className={`playing-main ${isShowLyric ? ' show-lyric' : ''}`}>
           <View className='phonograph'>
             <View className='tool flex-center'>
