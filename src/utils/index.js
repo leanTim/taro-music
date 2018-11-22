@@ -49,3 +49,12 @@ export function parseLrc(lrc_content) {
     scroll: scroll
   };
 }
+
+export function formatCmtCount (count) {
+  let num = parseInt(count)
+  if (num <= 999) {
+    return num + ''
+  } else {
+    return '999+'
+  }
+}

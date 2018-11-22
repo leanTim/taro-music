@@ -9,6 +9,7 @@ import loveIcon from '../../image/cm2_play_icn_love@2x.png'
 import lovedIcon from '../../image/cm2_play_icn_loved@2x.png'
 import dldIcon from '../../image/cm2_play_icn_dld@2x.png'
 import cmtIcon from '../../image/cm2_play_icn_cmt_num@2x.png'
+import defaultCmtIcon from '../../image/cm2_play_icn_cmt@2x.png'
 import moreIcon from '../../image/cm2_play_icn_more@2x.png'
 import loopIcon from '../../image/cm2_icn_loop@2x.png'
 import shuffleIcon from '../../image/cm2_icn_shuffle@2x.png'
@@ -22,7 +23,7 @@ import listIcon from '../../image/cm2_icn_list@2x.png'
 // request
 import request from '../../utils/request'
 
-import {transformMsToMin} from '../../utils'
+import {transformMsToMin, formatCmtCount} from '../../utils'
 
 // components
 import LyricPlaying from '../../components/LyricPlaying'
@@ -43,7 +44,8 @@ export default class Index extends Component {
       current: 0,
       lyric: '',
       isShowLyric: false,
-      isShowDefaultBg: true
+      isShowDefaultBg: true,
+      commentTotalCount: 0
     }
   }
 
@@ -54,7 +56,8 @@ export default class Index extends Component {
   async componentDidMount () {
     this.id = this.$router.params.id
     await this.requestSongDetail(this.id)
-    this.requestSongUrl(this.id)
+    await this.requestSongUrl(this.id)
+    this.requestCommentTotalCount(this.id)
   }
 
   componentWillUnmount () { }
@@ -107,6 +110,21 @@ export default class Index extends Component {
       songUrl: url
     }, () => {
       this.audioPlayer()
+    })
+  }
+
+  async requestCommentTotalCount (id) {
+    const {total} = await request({
+      url: 'comment/music',
+      data: {
+        limit: 0,
+        offset: 0,
+        id
+      }
+    })
+
+    this.setState({
+      commentTotalCount: total
     })
   }
 
@@ -186,13 +204,29 @@ export default class Index extends Component {
     })
   }
 
+  rendercmtIcon () {
+    console.log(11111)
+    if (this.state.commentTotalCount > 0) {
+      return (<View className='comments info-icon'>
+                <Text className='count'>{commentTotalCount}</Text>
+                <Image className='info-img' mode='aspectFill' src={cmtIcon} />
+              </View>)
+    } else {
+      return (<View className='comments info-icon'>
+                <Image className='info-img' mode='aspectFill' src={defaultCmtIcon} />
+              </View>)
+    }
+  }
+
   render () {
     const playPausedIcon = this.state.isPaused ? startIcon : pausedIcon
     const durationStr = transformMsToMin(this.state.duration)
     const currentStr = transformMsToMin(this.state.current)
+    const cmtIcn = this.state.commentTotalCount ? cmtIcon : defaultCmtIcon
+    const formatedCmtCount = formatCmtCount(this.state.commentTotalCount)
 
     return (
-      <View className='playing-page'>
+      <View className={isPaused ? 'playing-page paused' : 'playing-page'}>
         {isShowDefaultBg && <Image className='page-bg' mode='aspectFill' src={playingBg} />}
         <Image className='page-bg' mode='aspectFill' src={this.state.bgImgUrl} onLoad={this.handleBgLoad.bind(this)} />
         <View className={`playing-main ${isShowLyric ? ' show-lyric' : ''}`}>
@@ -215,7 +249,8 @@ export default class Index extends Component {
                 <Image className='info-img' mode='aspectFill' src={dldIcon} />
               </View>
               <View className='comments info-icon'>
-                <Image className='info-img' mode='aspectFill' src={cmtIcon} />
+                {commentTotalCount && <Text className='count'>{formatedCmtCount}</Text>}
+                <Image className='info-img' mode='aspectFill' src={cmtIcn} />
               </View>
               <View className='more info-icon'>
                 <Image className='info-img' mode='aspectFill' src={moreIcon} />
@@ -252,10 +287,10 @@ export default class Index extends Component {
               </View>
             </View>
           </View>
-          {this.state.isShowLyric && <LyricPlaying onHideLyric={this.hideLyric.bind(this)} current={Math.round(this.state.current / 1000)} lyric={this.state.lyric} />}
+          {this.state.isShowLyric && 
+          <LyricPlaying onHideLyric={this.hideLyric.bind(this)} current={Math.round(this.state.current / 1000)} lyric={this.state.lyric} />}
         </View>
       </View>
     )
   }
 }
-

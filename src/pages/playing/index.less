@@ -31,11 +31,16 @@
         margin-top: -60px;
         margin-left: 120px;
         z-index: 2;
+        transform-origin:30px 30px;
+        transform:rotate(-0deg);
+        transition:all linear .2s;
       }
     }
     .panel {
       margin-top: -140px;
       position: relative;
+      animation-delay:.5s;
+      animation:circle 20s linear infinite;
       .bg {
         width: 80vw;
         height: 80vw;
@@ -67,6 +72,16 @@
         .info-img {
           width: 80px;
           height: 80px;
+        }
+        .comments {
+          position: relative;
+          .count {
+            position: absolute;
+            color: #fff;
+            font-size: 20px;
+            right: 24px;
+            top: 8px;
+          }
         }
       }
       .progress {
@@ -109,4 +124,21 @@
       display: none;
     }
   }
+}
+.paused {
+  .panel {
+    animation-play-state: paused!important;
+  }
+  .tool {
+    .img {
+      // transform-origin:30px 30px;
+      transform:rotate(-20deg)!important;
+      // transition:all linear .5s;
+    }
+  }
+}
+
+@keyframes circle{
+	0%{transform: rotate(0deg)}
+	100%{ transform: rotate(360deg)}
 }
