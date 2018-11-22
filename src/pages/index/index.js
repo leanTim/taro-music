@@ -19,7 +19,6 @@ import MvItem from '../../components/MvItem'
 // request
 import request from '../../utils/request'
 
-import '@tarojs/async-await'
 export default class Index extends Component {
   config = {
     navigationBarTitleText: '发现音乐'

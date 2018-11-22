@@ -1,4 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
+import '@tarojs/async-await'
 
 import Index from './pages/index'
 
@@ -9,7 +10,8 @@ class App extends Component {
   config = {
     pages: [
       'pages/index/index',
-      'pages/playing/index'
+      'pages/playing/index',
+      'pages/songComment/index'
     ],
     window: {
       backgroundTextStyle: '#fbfcfd',

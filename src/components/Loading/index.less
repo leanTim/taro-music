@@ -1,0 +1,35 @@
+.loading {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 50px;
+  font-size: 26px;
+  color: #888;
+  .loading-wrap {
+    display: flex;
+    overflow: hidden;
+  }
+  .ld-container {
+    display: flex;
+  }
+  .item {
+    width: 4px;
+    height: 30px;
+    background-color: #d33a31;
+    margin-right: 6px;
+    border-radius: 1px;
+    animation: loading .9s linear infinite;
+  }
+  .item2 {
+    animation-delay: .6s;
+  }
+  .item3 {
+    animation-delay: .3s;
+  }
+}
+
+@keyframes loading{
+	0%{ transform: translateY(0rpx)}
+	50%{ transform: translateY(20rpx)}
+	100%{ transform: translateY(0rpx)}
+}

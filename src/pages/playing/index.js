@@ -204,18 +204,10 @@ export default class Index extends Component {
     })
   }
 
-  rendercmtIcon () {
-    console.log(11111)
-    if (this.state.commentTotalCount > 0) {
-      return (<View className='comments info-icon'>
-                <Text className='count'>{commentTotalCount}</Text>
-                <Image className='info-img' mode='aspectFill' src={cmtIcon} />
-              </View>)
-    } else {
-      return (<View className='comments info-icon'>
-                <Image className='info-img' mode='aspectFill' src={defaultCmtIcon} />
-              </View>)
-    }
+  navigateToComment () {
+    Taro.navigateTo({
+      url: `/pages/songComment/index?id=${this.id}`
+    })
   }
 
   render () {
@@ -248,7 +240,7 @@ export default class Index extends Component {
               <View className='download info-icon'>
                 <Image className='info-img' mode='aspectFill' src={dldIcon} />
               </View>
-              <View className='comments info-icon'>
+              <View className='comments info-icon' onClick={this.navigateToComment.bind(this)}>
                 {commentTotalCount && <Text className='count'>{formatedCmtCount}</Text>}
                 <Image className='info-img' mode='aspectFill' src={cmtIcn} />
               </View>
