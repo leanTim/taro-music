@@ -35,7 +35,8 @@ export default class Index extends Component {
       nickname: '',
       playCount: 0,
       trackCount: 0,
-      songsList: []
+      songsList: [],
+      isLoading: true
     }
   }
 
@@ -56,6 +57,9 @@ export default class Index extends Component {
   componentDidHide () { }
 
   async requestPlayListDetail () {
+    this.setState({
+      isLoading: true
+    })
     const {playlist} = await request({
       url: 'playlist/detail',
       data: {
@@ -65,7 +69,8 @@ export default class Index extends Component {
     this.formatPlayListMsg(playlist)
     const {tracks} = playlist
     this.setState({
-      songsList: this.formatListData(tracks)
+      songsList: this.formatListData(tracks),
+      isLoading: false
     })
   }
 
@@ -157,7 +162,7 @@ export default class Index extends Component {
             </View>
           </View>
         </View>
-        <View className='list-detail'>
+        {!this.state.isLoading && <View className='list-detail'>
           <View className='flex-box'>
             <View className='flex-left'>
               <Image className='img' src={playAllBtn} />
@@ -174,8 +179,8 @@ export default class Index extends Component {
               )
             })
           }
-          
-        </View>
+        </View>}
+        {this.state.isLoading && <Loading />}
         
       </View>
     )

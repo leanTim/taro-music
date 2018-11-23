@@ -219,7 +219,7 @@ export default class Index extends Component {
           </View>
           <View className='recommend-daily'>
             <Navigator hover-class='none'>
-              <View className='img-wrap'>15</View>
+              <View className='img-wrap'>{new Date().getDate()}</View>
               <Text className='desc'>每日歌曲推荐</Text>
             </Navigator>
           </View>
