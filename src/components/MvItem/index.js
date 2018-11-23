@@ -1,4 +1,4 @@
-import Taro, { Component } from '@tarojs/taro'
+import Taro, { Component, hideToast } from '@tarojs/taro'
 import { View, Image, Navigator, Text } from '@tarojs/components'
 import PropTypes from 'prop-types';
 
@@ -20,12 +20,15 @@ export default class MvItem extends Component {
       name: '',
       playCount: 0,
       imgUrl: '',
-      artist: ''
+      artist: '',
+      id: 0
     }
   }
 
-  componentDidMount () {
-    // console.log(this.props)
+  navigateToDetail () {
+    Taro.navigateTo({
+      url: `/pages/mvPlaying/index?id=${this.props.mvMsg.id}`
+    })
   }
 
   render () {
@@ -36,7 +39,7 @@ export default class MvItem extends Component {
       playCount
     } = this.props.mvMsg
     return (
-      <View className='mv-item'>
+      <View className='mv-item' onClick={this.navigateToDetail.bind(this)}>
         <View className='cover-view'>
           <Image className='poster' src={imgUrl} mode='aspectFill' />
           <View className='cover'>

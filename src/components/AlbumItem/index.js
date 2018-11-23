@@ -26,7 +26,7 @@ export default class AlbumItem extends Component {
 
   navigateToDetail () {
     Taro.navigateTo({
-      url: `/pages/songListDetail/index?id=${this.props.albumMsg.id}`
+      url: `/pages/songsListDetail/index?id=${this.props.albumMsg.id}`
     })
   }
 
