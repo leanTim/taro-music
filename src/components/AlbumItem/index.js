@@ -3,8 +3,9 @@ import { View, Image, Navigator, Text } from '@tarojs/components'
 import PropTypes from 'prop-types';
 
 import headSetIcon from '../../image/p0.png'
-
 import './index.less'
+
+import {formatRecommendListCount} from '../../utils'
 
 export default class AlbumItem extends Component {
   constructor (props) {
@@ -23,6 +24,12 @@ export default class AlbumItem extends Component {
     }
   }
 
+  navigateToDetail () {
+    Taro.navigateTo({
+      url: `/pages/songListDetail/index?id=${this.props.albumMsg.id}`
+    })
+  }
+
   render () {
     const {
       name,
@@ -31,11 +38,11 @@ export default class AlbumItem extends Component {
     } = this.props.albumMsg
 
     return (
-      <View className='album-item'>
+      <View className='album-item' onClick={this.navigateToDetail.bind(this)}>
         <View className='cover-wrap'>
           <Image mode='aspectFill' className='poster' src={imgUrl} />
           <View className='cover'>
-            <Image className='cover-img' src={headSetIcon} />{playCount}
+            <Image className='cover-img' src={headSetIcon} />{formatRecommendListCount(playCount)}
           </View>
         </View>
         <Text className='desc'>{name}</Text>

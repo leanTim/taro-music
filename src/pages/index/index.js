@@ -60,10 +60,7 @@ export default class Index extends Component {
     })
     this.setState({
       bannerList: this.formatBannerData(banners)
-    }, () => {
-      // console.log(this.state)
     })
-    // console.log(banners, 'banners')
   }
 
   // 推荐歌单
@@ -74,8 +71,6 @@ export default class Index extends Component {
     })
     this.setState({
       recommendList: this.fromatAlbumData(result).filter((item, index) => index <= 5)
-    }, () => {
-      // console.log(this.state)
     })
   }
 
@@ -87,8 +82,6 @@ export default class Index extends Component {
     // console.log(this.fromatLatestMusicData(result))
     this.setState({
       latestMusicList: this.fromatLatestMusicData(result).filter((item, index) => index <= 5)
-    }, () => {
-      // console.log(this.state)
     })
   }
 
@@ -99,8 +92,6 @@ export default class Index extends Component {
     })
     this.setState({
       recommendMvList: this.fromatAlbumData(result)
-    },() => {
-      // console.log(this.state)
     })
   }
 
@@ -111,10 +102,7 @@ export default class Index extends Component {
     })
     this.setState({
       radioAnchorList: this.fromatAlbumData(result)
-    },() => {
-      // console.log(this.state)
     })
-    // console.log(result)
   }
 
   formatBannerData (banners) {
@@ -141,13 +129,15 @@ export default class Index extends Component {
         name,
         playCount: playCount = 0,
         picUrl: imgUrl,
-        artistName: artist = ''
+        artistName: artist = '',
+        id
       } = item
       formatList.push({
         name,
         playCount,
         imgUrl,
-        artist
+        artist,
+        id
       })
     }))
     return formatList

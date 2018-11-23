@@ -50,11 +50,22 @@ export function parseLrc(lrc_content) {
   };
 }
 
-export function formatCmtCount (count) {
+export function formatCmtCount (count = 0) {
   let num = parseInt(count)
   if (num <= 999) {
     return num + ''
   } else {
     return '999+'
   }
+}
+
+/**
+ * 数字> 10万 返回 '...万'  >10亿 返回'...亿'
+ * @param {*} count 
+ */
+export function formatRecommendListCount (count = 0) {
+  let num = parseInt(count)
+  if (num <100 * 1000) return num
+  if (100 * 1000 <= num < 10 * 10 * 1000 * 10 * 1000) return Math.round(num / (10 * 1000)) + '万'
+  if (num >= 10 * 1000 * 10 * 1000) return Math.round(num / (10 * 1000 * 1000)) / 10 + '亿'
 }

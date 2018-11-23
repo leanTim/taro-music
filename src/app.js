@@ -11,7 +11,8 @@ class App extends Component {
     pages: [
       'pages/index/index',
       'pages/playing/index',
-      'pages/songComment/index'
+      'pages/songComment/index',
+      'pages/songListDetail/index'
     ],
     window: {
       backgroundTextStyle: '#fbfcfd',

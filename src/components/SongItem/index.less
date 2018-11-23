@@ -1,0 +1,37 @@
+.flex-box {
+  display: flex;
+  .flex-left {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 30px;
+    color: #999;
+    .img {
+      width: 36px;
+      height: 36px;
+    }
+  }
+  .flex-right {
+    flex: 1;
+    padding: 10px 0;
+    border-bottom: 1px solid #e1e2e3;
+    line-height: 1.5;
+    .artist {
+      font-size: 24px;
+      color: #999;
+    }
+    .name {
+      font-size: 32px;
+      margin-right: 8px;
+    }
+    .text {
+      word-break: break-all;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      line-height: 1.6;
+    }
+  }
+}
