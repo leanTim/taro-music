@@ -4,8 +4,7 @@ import './index.less'
 
 import request from '../../utils/request'
 
-import Comment from '../../components/CommentItem/index.js'
-import Loading from '../../components/Loading'
+import CommentPage from '../../components/CommentPage'
 
 export default class Index extends Component {
 
@@ -123,15 +122,11 @@ export default class Index extends Component {
     const isShowTitle = !(this.state.isLoading && this.state.offset === 0)
     return (
       <View className='song-comments'>
-        {isShowTitle && <Text className='reply-type'>热门评论</Text>}
-        {
-          this.state.hotComments.map(comment => <Comment key={comment.commentId} cmtMsg={comment} />)
-        }
-        {isShowTitle && <Text className='reply-type'>全部评论&nbsp;{this.state.total}</Text>}
-        {
-          this.state.comments.map((comment) => <Comment key={comment.commentId} cmtMsg={comment} />)
-        }
-        {this.state.isLoading && <Loading />}
+        <CommentPage 
+          hotCmts={this.state.hotComments} 
+          allCmts={this.state.comments} 
+          isShowTitle={isShowTitle}
+          isLoading={this.state.isLoading} />
       </View>
     )
   }

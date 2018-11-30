@@ -4,6 +4,9 @@ import './index.less'
 
 import request from '../../utils/request.js'
 
+import Detail from './components/Detail'
+import CommentPage from '../../components/CommentPage'
+
 export default class Index extends Component {
 
   config = {
@@ -23,6 +26,12 @@ export default class Index extends Component {
       poster: '',
       commentCount: 0,
       sourceSrc: '',
+      limit: 20,
+      total: 0,
+      hotComments: [],
+      allComments: [],
+      isLoading: true,
+      offset: 0,
       tabsTitle: [
         {
           title: '详情',
@@ -45,7 +54,6 @@ export default class Index extends Component {
     this.mvId = this.$router.params.id
     this.requestMvDetail()
     this.requestEffectMv()
-    // console.log(this.$router.params.id)
   }
 
   componentDidMount () { }
@@ -78,6 +86,78 @@ export default class Index extends Component {
     })
   }
 
+  async requestComments () {
+    this.setState({
+      isLoading: true
+    })
+
+    const data = await request({
+      url: 'comment/mv',
+      data: {
+        id: this.mvId,
+        limit: this.state.limit,
+        offset: this.state.offset
+      }
+    })
+
+    this.addPage()
+    this.setState((prevState) => {
+      return ({
+        total: data.total,
+        allComments: prevState.allComments.concat(this.formatComments(data.comments)),
+        hotComments: prevState.hotComments.concat(this.formatComments(data.hotComments)),
+        isLoading: false
+      })
+    })
+  }
+
+
+  addPage () {
+    this.setState({
+      offset: this.state.offset + 1
+    })
+  }
+
+  formatComments (comments) {
+    let result = []
+    comments && comments.map((comment) => {
+      let {
+        commentId,
+        content,
+        likedCount,
+        time,
+        user: {
+          avatarUrl,
+          nickname,
+          userID
+        },
+        beReplied: [{
+          beRepliedCommentId: beRepliedCommentId = 0,
+          content: beRepliedContent = '',
+          user: {
+            nickname: beRepliedNickname = '',
+            userId: beRepliedUserId = 0
+          } = {}
+        } = {}]
+      } = comment
+
+      result.push({
+        commentId,
+        content,
+        likedCount,
+        time,
+        avatarUrl,
+        nickname,
+        userID,
+        beRepliedCommentId,
+        beRepliedContent,
+        beRepliedNickname,
+        beRepliedUserId
+      })
+    })
+    return result
+  }
+
   getFormateData (obj) {
     const {
       name,
@@ -103,14 +183,38 @@ export default class Index extends Component {
     })
   }
 
-  test (e) {
+  toggleTab (e) {
+    if (e.currentTarget.id === 'comments' && this.state.offset === 0) {
+      this.requestComments()
+    }
     this.setState({
       currentTab: e.currentTarget.id
     })
-    console.log(e)
   }
 
   render () {
+    const mvMsg = {
+      name: this.state.name,
+      playCount: this.state.playCount,
+      artistName: this.state.artistName,
+      publishTime: this.state.publishTime,
+      desc: this.state.desc
+    }
+
+    const isShowTitle = !(this.state.isLoading && this.state.offset === 0)
+
+    const curTab = this.state.currentTab
+    let tabComtent = null
+    if (curTab === 'detail') {
+      tabComtent = <Detail mvMsg={mvMsg}/>
+    } else if (curTab === 'comments') {
+      tabComtent = <CommentPage 
+                      hotCmts={this.state.hotComments} 
+                      allCmts={this.state.allComments} 
+                      isShowTitle={isShowTitle}
+                      isLoading={this.state.isLoading} />
+    }
+
     return (
       <View className='mv-playing'>
         <Video
@@ -125,13 +229,14 @@ export default class Index extends Component {
             {
               tabsTitle.map((item, index) => {
                 return (
-                  <View key={index} onClick={this.test.bind(this)} id={item.id} className='bar-name'>
+                  <View key={index} onClick={this.toggleTab.bind(this)} id={item.id} className='bar-name'>
                     <Text className={item.id === this.state.currentTab ? 'current text' : 'text'}>{item.title}</Text>
                   </View>
                 )
               })
             }
           </View>
+          <View className='bar-content'>{tabComtent}</View>
          </View>
       </View>
     )

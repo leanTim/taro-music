@@ -6,7 +6,7 @@ import './index.less'
 import beforeSupIcon from '../../image/xg.png'
 import supedIcon from '../../image/xl.png'
 
-export default class Comment extends Component {
+export default class CommentItem extends Component {
   constructor (props) {
     super(props)
     this.state = {
