@@ -40,7 +40,7 @@ export default class AlbumItem extends Component {
     return (
       <View className='album-item' onClick={this.navigateToDetail.bind(this)}>
         <View className='cover-wrap'>
-          <Image mode='aspectFill' className='poster' src={imgUrl} />
+          <View style={{backgroundImage: `url(${imgUrl})`}} className='poster'/>
           <View className='cover'>
             <Image className='cover-img' src={headSetIcon} />{formatRecommendListCount(playCount)}
           </View>

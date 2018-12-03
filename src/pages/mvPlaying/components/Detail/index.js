@@ -25,7 +25,6 @@ export default class Detail extends Component {
       publishTime,
       desc
     } = this.props.mvMsg
-    console.log(this.props.mvMsg)
 
     return (
       <View className='detail-wrap'>

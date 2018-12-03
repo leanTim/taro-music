@@ -28,5 +28,19 @@
         color: #d33a31;
       }
     }
+    .bar-content {
+      .relate-list {
+        padding: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        mv-item {
+          width: 32%;
+          margin-right: 2%;
+          &:nth-child(3n) {
+            margin-right: 0;
+          }
+        }
+      }
+    }
   }
 }

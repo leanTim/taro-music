@@ -36,7 +36,7 @@ export default class MusicItem extends Component {
     } = this.props.musicMsg
     return (
       <View className='music-item' onClick={this.handlerClick.bind(this, id)}>
-        <Image className='poster' src={imgUrl} mode='aspectFill' />
+        <View className='poster' style={{backgroundImage: `url(${imgUrl})`}} />
         <View className='name text'>{name}</View>
         <View className='artist text'>{artist}</View>
       </View>

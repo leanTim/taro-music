@@ -1,4 +1,4 @@
-import Taro, { Component, hideToast } from '@tarojs/taro'
+import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Image, Slider } from '@tarojs/components'
 import './index.less'
 

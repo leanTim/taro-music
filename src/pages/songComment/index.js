@@ -1,5 +1,5 @@
-import Taro, { Component, hideToast } from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
+import Taro, { Component } from '@tarojs/taro'
+import { View } from '@tarojs/components'
 import './index.less'
 
 import request from '../../utils/request'
@@ -21,22 +21,17 @@ export default class Index extends Component {
       hotComments: [],
       limit: 20,
       offset: 0,
-      id: 0,
       isLoading: true
     }
   }
 
   componentWillMount () { 
-    // this.id = 
-    this.setState({
-      id: this.$router.params.id
-    }, () => {
-      this.requestComment(this.state.id)
-    })
+    this.id = this.$router.params.id
+    this.requestComments(this.id)
   }
 
   onReachBottom () {
-    this.requestComment(this.state.id)
+    this.requestComments(this.id)
   }
 
   componentDidMount () { }
@@ -47,7 +42,7 @@ export default class Index extends Component {
 
   componentDidHide () { }
 
-  async requestComment (id) {
+  async requestComments (id) {
     this.setState({
       isLoading: true
     })
@@ -61,7 +56,7 @@ export default class Index extends Component {
       data: reqData
     })
 
-    this.addPage()
+    this.getAddPage()
     this.setState((prevState) => {
       return ({
         total: data.total,
@@ -72,7 +67,7 @@ export default class Index extends Component {
     })
   }
 
-  addPage () {
+  getAddPage () {
     this.setState({
       offset: this.state.offset + 1
     })

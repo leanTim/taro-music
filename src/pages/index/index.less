@@ -9,11 +9,28 @@
 
 .container {
 	padding: 14px;
-	padding-right: 0;
+	// padding-right: 0;
 	.music-list {
 		display: flex;
 		flex-wrap: wrap;
+		// justify-content: space-
 	}
+	mv-item {
+		width: 49%;
+		margin-right: 2%;
+		&:nth-child(2n) {
+			margin-right: 0;
+		}
+	}
+	album-item,
+	music-item {
+		width: 32%;
+		margin-right: 2%;
+		&:nth-child(3n) {
+			margin-right: 0;
+		}
+	}
+
 }
 
 .recommend-wrap {

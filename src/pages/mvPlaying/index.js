@@ -1,4 +1,4 @@
-import Taro, { Component, hideToast } from '@tarojs/taro'
+import Taro, { Component } from '@tarojs/taro'
 import { View, Video, Text } from '@tarojs/components'
 import './index.less'
 
@@ -6,11 +6,14 @@ import request from '../../utils/request.js'
 
 import Detail from './components/Detail'
 import CommentPage from '../../components/CommentPage'
+// import MvItem from '../../components/MvItem'
+import MvItem from '../../components/MvItem'
 
 export default class Index extends Component {
 
   config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '首页',
+    onReachBottomDistance: 50
   }
 
   constructor (props) {
@@ -30,6 +33,7 @@ export default class Index extends Component {
       total: 0,
       hotComments: [],
       allComments: [],
+      relatedMvList: [],
       isLoading: true,
       offset: 0,
       tabsTitle: [
@@ -54,6 +58,11 @@ export default class Index extends Component {
     this.mvId = this.$router.params.id
     this.requestMvDetail()
     this.requestEffectMv()
+    this.requestRelatedMv()
+  }
+
+  onReachBottom () {
+    if (this.state.currentTab === 'comments') this.requestComments(this.state.id)
   }
 
   componentDidMount () { }
@@ -111,11 +120,48 @@ export default class Index extends Component {
     })
   }
 
+  async requestRelatedMv (id) {
+    const {mvs} = await request({
+      url: 'simi/mv',
+      data: {
+        mvid: this.mvId
+      }
+    })
+
+    this.setState((prevState) => {
+      return ({
+        relatedMvList: prevState.relatedMvList.concat(this.formatRelatedMv(mvs))
+      })
+    }, () => {
+      console.log(this.state)
+    })
+  }
 
   addPage () {
     this.setState({
       offset: this.state.offset + 1
     })
+  }
+
+  formatRelatedMv (mvs) {
+    let result = []
+    mvs.map((mv, index) => {
+      const {
+        playCount,
+        id,
+        cover: imgUrl,
+        name,
+        artistName: artist
+      } = mv
+      result.push({
+        playCount,
+        id,
+        imgUrl,
+        name,
+        artist
+      })
+    })
+    return result
   }
 
   formatComments (comments) {
@@ -213,6 +259,16 @@ export default class Index extends Component {
                       allCmts={this.state.allComments} 
                       isShowTitle={isShowTitle}
                       isLoading={this.state.isLoading} />
+    } else {
+      tabComtent = <View className='relate-list' >
+        {
+          this.state.relatedMvList.map((item, i) => {
+            return (
+              <MvItem key={i} mvMsg={item} />
+            )
+          })
+        }
+      </View>
     }
 
     return (

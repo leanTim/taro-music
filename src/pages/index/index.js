@@ -260,7 +260,7 @@ export default class Index extends Component {
               <View className='music-list'>
                 {
                   recommendMvList.map(((recommendMv, index) => {
-                    return <MvItem key={index} mvMsg={recommendMv} />
+                    return <MvItem className='test' key={index} mvMsg={recommendMv} />
                   }))
                 }
               </View>

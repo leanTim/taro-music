@@ -42,7 +42,6 @@ export default class MvItem extends Component {
       <View className='mv-item' onClick={this.navigateToDetail.bind(this)}>
         <View className='cover-view'>
           <View className='poster' style={{backgroundImage: `url(${imgUrl})`}}></View>
-          {/* <Image className='poster' src={imgUrl} mode='aspectFill' /> */}
           <View className='cover'>
             <Image className='cover-img' src={headSetIcon} />{playCount}
           </View>
