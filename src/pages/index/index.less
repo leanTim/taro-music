@@ -6,16 +6,17 @@
     height: 100%;
   }
 }
-
+* {
+	margin: 0;
+	padding: 0;
+}
 .container {
 	padding: 14px;
-	// padding-right: 0;
 	.music-list {
 		display: flex;
 		flex-wrap: wrap;
-		// justify-content: space-
 	}
-	mv-item {
+	mv-item, .mv-item {
 		width: 49%;
 		margin-right: 2%;
 		&:nth-child(2n) {
@@ -23,7 +24,9 @@
 		}
 	}
 	album-item,
-	music-item {
+	music-item,
+	.album-item,
+	.music-item {
 		width: 32%;
 		margin-right: 2%;
 		&:nth-child(3n) {

@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image, Navigator, Text } from '@tarojs/components'
+import { View, Image, Text } from '@tarojs/components'
 import PropTypes from 'prop-types';
 
 import headSetIcon from '../../image/p0.png'
@@ -40,7 +40,7 @@ export default class AlbumItem extends Component {
     return (
       <View className='album-item' onClick={this.navigateToDetail.bind(this)}>
         <View className='cover-wrap'>
-          <View style={{backgroundImage: `url(${imgUrl})`}} className='poster'/>
+          <View style={{backgroundImage: `url(${imgUrl})`}} className='poster' />
           <View className='cover'>
             <Image className='cover-img' src={headSetIcon} />{formatRecommendListCount(playCount)}
           </View>

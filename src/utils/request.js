@@ -13,7 +13,7 @@ export default (options = { method: 'GET', data: {} }) => {
     url
   } = options
   // if (!noConsole) {
-  console.log(`${new Date().toLocaleString()}【 M=${url} 】P=${JSON.stringify(data)} method=${method}`);
+  // console.log(`${new Date().toLocaleString()}【 M=${url} 】P=${JSON.stringify(data)} method=${method}`);
   // }
   return Taro.request({
     url: baseURL + options.url,
@@ -22,14 +22,15 @@ export default (options = { method: 'GET', data: {} }) => {
       ...data
     },
     header: {
-      'Content-Type': 'application/json',
+      // 'text': 'Noone',
+      // 'Content-Type': 'application/json',
     },
     method: method.toUpperCase(),
   }).then((res) => {
     const { statusCode, data } = res;
     if (statusCode >= 200 && statusCode < 300) {
       // if (!noConsole) {
-      console.log(`${new Date().toLocaleString()}【 M=${options.url} 】【接口响应：】`,res.data);
+      // console.log(`${new Date().toLocaleString()}【 M=${options.url} 】【接口响应：】`,res.data);
       // }
       if (data.status && data.status !== 'ok') {
         Taro.showToast({

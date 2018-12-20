@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import './index.less'
 import beforeSupIcon from '../../image/xg.png'
-import supedIcon from '../../image/xl.png'
+// import supedIcon from '../../image/xl.png'
 
 export default class CommentItem extends Component {
   constructor (props) {

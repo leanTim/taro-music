@@ -27,11 +27,11 @@ export default class Index extends Component {
   constructor (props) {
     super (props)
     this.state = {
-      recommendList: null,
-      latestMusicList: null,
-      recommendMvList: null,
-      radioAnchorList: null,
-      bannerList: null
+      recommendList: [],
+      latestMusicList: [],
+      recommendMvList: [],
+      radioAnchorList: [],
+      bannerList: []
     }
   }
 
@@ -195,10 +195,14 @@ export default class Index extends Component {
     }
 
     return (
-      <View className='index todos'>
-        <Swiper interval='3000' indicatorDots autoplay className='swiper'>
+      <View className='index'>
+        <Swiper interval='3000' 
+          indicatorDots
+          circular="true"
+          autoplay 
+          className='swiper'>
           {
-            bannerList.map((banner) => {
+            this.state.bannerList && this.state.bannerList.map((banner) => {
               return (
                 <SwiperItem key={banner.id}>
                   <Image className='swiper-img' mode='aspectFill' src={banner.imgUrl}/>
@@ -207,7 +211,6 @@ export default class Index extends Component {
             })
           }
         </Swiper>
-
         <View className='recommend-wrap'>
           <View className='personal-fm'>
             <Navigator hover-class='none'>
@@ -238,7 +241,7 @@ export default class Index extends Component {
             <RecommendBar linkMsg={recommendBarMsg} />
             <View className='music-list'>
               {
-                recommendList.map((recommend, index) => {
+                this.state.recommendList && this.state.recommendList.map((recommend, index) => {
                   return <AlbumItem key={index} albumMsg={recommend} />
                 })
               }
@@ -248,7 +251,7 @@ export default class Index extends Component {
               <RecommendBar linkMsg={latestMusicBarMsg} />
               <View className='music-list'>
                 {
-                  latestMusicList.map((latestMusic, index) => {
+                  this.state.latestMusicList && this.state.latestMusicList.map((latestMusic, index) => {
                     return <MusicItem key={index} musicMsg={latestMusic} />
                   })
                 }
@@ -259,7 +262,7 @@ export default class Index extends Component {
               <RecommendBar linkMsg={recommendMvBarMsg} />
               <View className='music-list'>
                 {
-                  recommendMvList.map(((recommendMv, index) => {
+                  this.state.recommendMvList && this.state.recommendMvList.map(((recommendMv, index) => {
                     return <MvItem className='test' key={index} mvMsg={recommendMv} />
                   }))
                 }
@@ -269,7 +272,7 @@ export default class Index extends Component {
                 <RecommendBar linkMsg={radioAnchorBarMsg} />
                 <View className='music-list'>
                   {
-                    radioAnchorList.map(((recommendMv, index) => {
+                    this.state.radioAnchorList && this.state.radioAnchorList.map(((recommendMv, index) => {
                       return <MusicItem key={index} musicMsg={recommendMv} />
                     }))
                   }
