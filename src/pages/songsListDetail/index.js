@@ -129,19 +129,20 @@ export default class Index extends Component {
     return (
       <View className='songlist-detail'>
         <View className='list-header'>
+          
           <View style={{backgroundImage: `url(${this.state.coverImgUrl})`}} className='bg'></View>
           <View className='list-main'>
             <View className='list-cover'>
-              <Image className='default-cover' src={coverImgUrl.length ? coverImgUrl : defaultCover} />
+              <Image className='default-cover' src={this.state.coverImgUrl || defaultCover} />
               {this.state.playCount && <View className='cover-header'>
                 <Image className='head-set' mode='aspectFill' src={headSetIcon} />{formatRecommendListCount(this.state.playCount)}
               </View>}
             </View>
             <View className='list-msg'>
-              <Text>{name}</Text>
+              <Text>{this.state.name}</Text>
               <View className='author-msg'>
-                <Image style={{backgroundImage: `url(${defaultAvatar})`}} className='avatar' src={avatarUrl} />
-                <Text>{nickname}</Text>
+                <Image style={{backgroundImage: `url(${defaultAvatar})`}} className='avatar' src={this.state.avatarUrl} />
+                <Text>{this.state.nickname}</Text>
                 <Image className='icon-r' src={rightIcon} />
               </View>
             </View>
@@ -162,6 +163,7 @@ export default class Index extends Component {
             </View>
           </View>
         </View>
+
         {!this.state.isLoading && <View className='list-detail'>
           <View className='flex-box'>
             <View className='flex-left'>

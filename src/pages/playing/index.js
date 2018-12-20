@@ -218,17 +218,17 @@ export default class Index extends Component {
     const formatedCmtCount = formatCmtCount(this.state.commentTotalCount)
 
     return (
-      <View className={isPaused ? 'playing-page paused' : 'playing-page'}>
-        {isShowDefaultBg && <Image className='page-bg' mode='aspectFill' src={playingBg} />}
+      <View className={this.state.isPaused ? 'playing-page paused' : 'playing-page'}>
+        {this.state.isShowDefaultBg && <Image className='page-bg' mode='aspectFill' src={playingBg} />}
         <Image className='page-bg' mode='aspectFill' src={this.state.bgImgUrl} onLoad={this.handleBgLoad.bind(this)} />
-        <View className={`playing-main ${isShowLyric ? ' show-lyric' : ''}`}>
+        <View className={`playing-main ${this.state.isShowLyric ? ' show-lyric' : ''}`}>
           <View className='phonograph'>
             <View className='tool flex-center'>
               <Image className='img' mode='aspectFill' src={aag} /> 
             </View>
             <View className='panel flex-center' onClick={this.handleyric.bind(this)}>
               <Image className='bg' mode='aspectFit' src={panelBg} />
-              <Image className='album-img' mode='aspectFill' src={bgImgUrl} />
+              <Image className='album-img' mode='aspectFill' src={this.state.bgImgUrl} />
             </View>
           </View>
 
@@ -241,7 +241,7 @@ export default class Index extends Component {
                 <Image className='info-img' mode='aspectFill' src={dldIcon} />
               </View>
               <View className='comments info-icon' onClick={this.navigateToComment.bind(this)}>
-                {commentTotalCount && <Text className='count'>{formatedCmtCount}</Text>}
+                {this.state.commentTotalCount && <Text className='count'>{formatedCmtCount}</Text>}
                 <Image className='info-img' mode='aspectFill' src={cmtIcn} />
               </View>
               <View className='more info-icon'>
@@ -253,9 +253,9 @@ export default class Index extends Component {
               <Text className='start-time'>{currentStr}</Text>
               <Slider 
                 activeColor='#BB2C08' 
-                max={duration} 
-                value={current} 
-                blockSize='12' 
+                max={this.state.duration} 
+                value={this.state.current} 
+                blockSize={12} 
                 className='slider' 
                 onChange={this.handleSlideChange.bind(this)} />
               <Text className='end-time'>{durationStr}</Text>
